@@ -23,12 +23,21 @@ typedef struct player
 
 typedef struct runetime
 {
-	char	**map;
+	t_map	map;
 	t_player player;
 	mlx_image_t	*img;
 }			t_runtime;
 
+typedef struct s_map
+{
+	char	**un_pmap;
+	char	**pmap;
+	int		columns;
+	int		lines;
+}			t_map;
+
 char	*ft_strdup(char *dst, char	*src);
-void saveMap(t_runtime *r, int fd);
-int fileNameCheck(char *filename);
+void	saveMap(t_runtime *r, int fd, char *pline);
+int		fileNameCheck(char *filename);
+void	initval(t_runtime *r);
 #endif

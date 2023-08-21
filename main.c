@@ -6,7 +6,7 @@
 /*   By: jgirard- <jgirard-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 14:18:19 by jgirard-          #+#    #+#             */
-/*   Updated: 2023/08/19 13:14:04 by jgirard-         ###   ########.fr       */
+/*   Updated: 2023/08/21 13:48:11 by jgirard-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,10 @@ void my_keyhook(mlx_key_data_t keydata, void* param)
 	}
 }
 
-void loop_hook() {}
+void loop_hook() 
+{
+		
+}
 
 int	main(int ac, char **av)
 {
@@ -150,7 +153,7 @@ int	main(int ac, char **av)
 		return (1);
 	fd = open(av[1], O_RDONLY);
 	t_runtime r;
-	initMap(&r, fd);
+	saveMap(&r, fd);
 	mlx_set_setting(MLX_MAXIMIZED, false);
 	mlx_t* mlx = mlx_init(WIDTH, HEIGHT, "cub3D", true);
 	if (!mlx)
@@ -161,7 +164,6 @@ int	main(int ac, char **av)
 	r.player.playersize = 40;
 	r.player.Pposx = 250;
 	r.player.Pposy = 250;
-	//drawCube(img, centerX - cubesize / 2, centerY + cubesize / 2, cubesize ,get_rgba(255, 0, 0, 255));
 	fillCube(r.img, r.player.Pposx - r.player.playersize / 2, r.player.Pposy + r.player.playersize / 2, r.player.playersize ,get_rgba(255, 0, 0, 255));
 	drawLine(r.img, 20, 20, 50, 50, get_rgba(255, 0, 0, 255));
 	mlx_loop_hook(mlx,loop_hook, NULL);
