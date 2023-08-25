@@ -6,7 +6,7 @@
 /*   By: jgirard- <jgirard-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 16:54:12 by jgirard-          #+#    #+#             */
-/*   Updated: 2023/08/21 16:27:14 by jgirard-         ###   ########.fr       */
+/*   Updated: 2023/08/25 16:09:38 by jgirard-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,23 +212,6 @@ int	is_line_empty(char *str)
 	return (1);
 }
 
-char	*get_next_filed_line(int fd, int *line_num, t_runtime *r)
-{
-	char	*line;
-	int		nb_line;
-
-	line = get_next_line(fd);
-	nb_line = 1;
-	while (line && is_line_empty(line))
-	{
-		free(line);
-		line = get_next_line(fd);
-		nb_line++;
-	}
-	if (line_num)
-		line_num += nb_line;
-	return (line);
-}
 
 // void	mapParser(int fd, t_runtime *r)
 // {
@@ -284,6 +267,45 @@ void saveMap(t_runtime *r, int fd, char *pline)
 	free(n_map);
 } 
 
+char	*get_next_mod(int fd, int *line_num, t_runtime *r)
+{
+	char	*line;
+	int		nb_line;
+
+	line = get_next_line(fd);
+	nb_line = 1;
+	while (line && is_line_empty(line))
+	{
+		free(line);
+		line = get_next_line(fd);
+		nb_line++;
+	}
+	if (line_num)
+		line_num += nb_line;
+	return (line);
+}
+
+int ft_isupcase(int c)
+{
+	if(c >= 'A' && c <= 'Z')
+		return (1);
+	return (0);
+}
+
+int charset(char c, char *set)
+{
+	int i;
+
+	i = 0;
+	while(set[i])
+	{
+		if(c == set[i])
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
 void	cubfile(t_runtime *r, int fd)
 {
 	char	*uline;
@@ -292,7 +314,21 @@ void	cubfile(t_runtime *r, int fd)
 	uline = (char *) 1;
 	while (uline && !r->map.un_pmap)
 	{
-		uline = get_next_line_mod();
+		uline = get_next_line_mod(fd, r->map.lines);
+		r->map.lines++;
+		i = 0;
+		while (uline && ft_is_space(uline[i]))
+			i++;
+		if (!uline || uline[i] == '#')
+			free(uline);
+		else if (ft_isupcase(uline[i]))
+			map_params_setup(uline, r);
+		else if (charset(uline[i], MAP_PARSET))
+			saveMap(r, fd, uline);
+		else
+			printf("Error: Critical 101\n");
 	}
-	
+	uline = get_next_mod(fd, r->map.lines, r);
+	if(uline)
+		printf("Error: Critical 101\n");
 }

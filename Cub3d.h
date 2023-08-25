@@ -1,6 +1,8 @@
 #ifndef		CUB3D_H
 # define		CUB3D_H
 
+#define	MAP_PARSET	"10NWES"
+
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
