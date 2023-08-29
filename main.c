@@ -6,7 +6,7 @@
 /*   By: jgirard- <jgirard-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 14:18:19 by jgirard-          #+#    #+#             */
-/*   Updated: 2023/08/21 13:48:11 by jgirard-         ###   ########.fr       */
+/*   Updated: 2023/08/28 18:04:13 by jgirard-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,12 +148,12 @@ void loop_hook()
 int	main(int ac, char **av)
 {
 	(void)ac;
-	int fd;
+	//int fd;
 	if(fileNameCheck(av[1]))
 		return (1);
-	fd = open(av[1], O_RDONLY);
+	//fd = open(av[1], O_RDONLY);
 	t_runtime r;
-	saveMap(&r, fd);
+	//saveMap(&r, fd);
 	mlx_set_setting(MLX_MAXIMIZED, false);
 	mlx_t* mlx = mlx_init(WIDTH, HEIGHT, "cub3D", true);
 	if (!mlx)

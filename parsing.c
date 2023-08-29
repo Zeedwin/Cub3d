@@ -6,7 +6,7 @@
 /*   By: jgirard- <jgirard-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 16:54:12 by jgirard-          #+#    #+#             */
-/*   Updated: 2023/08/25 16:09:38 by jgirard-         ###   ########.fr       */
+/*   Updated: 2023/08/29 14:21:53 by jgirard-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,20 +154,147 @@ char	**ft_strcpy_env(char **envp)
 	len = 0;
 	while (envp[i])
 	{
-		i++;
-		len++;
-	}
-	i = 0;
-	cpyenv = malloc(sizeof(char *) * (len + 1));
-	if (!cpyenv)
-		return (NULL);
-	while (envp[i])
-	{
 		cpyenv[i] = ft_strdup_f(envp[i]);
 		i++;
 	}
 	cpyenv[i] = NULL;
 	return (cpyenv);
+}
+
+int fileNameCheck(char *filename)
+{
+	int i;
+
+	i = 0;
+	if(!filename)
+	{
+		printf("Error: No file was passed, Exmple: ./cub3D <filename>\n");
+		return (1);
+	}
+	while(filename[i])
+		i++;
+	if(filename[i - 1] == 'b' && filename[i - 2] == 'u' && filename[i - 3] == 'c')
+		return(0);
+	printf("Error: Wrong filetype, select a file with .cub termination\n");
+	return(1);
+}
+
+int ft_is_space(int n)
+{
+	return(n == '\r' 
+		|| n == ' ' 
+		|| n == '\t'
+		|| n == '\0'
+		|| n == '\v');
+}
+
+int	is_line_empty(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (!str)
+		return (1);
+	while (str[i])
+	{
+		if (!ft_is_space(str[i++]))
+			return (0);
+	}
+	return (1);
+}
+
+
+// void	mapParser(int fd, t_runtime *r)
+// {
+// 	char *line;
+// 	int i;
+// 	int rows;
+	
+// 	line = (char *) 1;
+// 	rows = 0;
+// 	while (line)
+// 	{
+// 		line = get_next_line_mod(fd, &rows);
+// 		++rows;
+// 		i = 0;
+// 		while (line && ft_is_space(line[i]))
+// 		{
+			
+// 		}
+		
+// 	}
+	
+// }
+
+void	init_val(t_runtime *r)
+{
+	r->map.lines = 0;
+	r->map.columns = 0;
+	r->map.un_pmap = NULL;
+	r->map.pmap = NULL;
+	r->player.playersize = 0;
+	r->player.Pposx = 0;
+	r->player.Pposy = 0;	
+}
+
+void saveMap(t_runtime *r, int fd, char *pline)
+{
+	char	*n_map;
+	char	*tmp;
+	
+	n_map = ft_strdup(tmp, "");
+	while (pline && !is_line_empty(pline))
+	{
+		n_map = ft_strjoin(n_map, pline);
+		pline = get_next_line(fd);
+		free(pline);
+		pline =	get_next_line(fd);
+		r->map.lines++;
+		if((int) gnl_ft_strlen(pline) > r->map.columns)
+			r->map.columns = gnl_ft_strlen(pline);
+	}
+	free(pline);
+	r->map.un_pmap = ft_split(n_map, '\n');
+	free(n_map);
+} 
+
+char	*get_next_mod(int fd, int *line_num, t_runtime *r)
+{
+	char	*line;
+	int		nb_line;
+
+	line = get_next_line(fd);
+	nb_line = 1;
+	while (line && is_line_empty(line))
+	{
+		free(line);
+		line = get_next_line(fd);
+		nb_line++;
+	}
+	if (line_num)
+		line_num += nb_line;
+	return (line);
+}
+
+int ft_isupcase(int c)
+{
+	if(c >= 'A' && c <= 'Z')
+		return (1);
+	return (0);
+}
+
+int charset(char c, char *set)
+{
+	int i;
+
+	i = 0;
+	while(set[i])
+	{
+		if(c == set[i])
+			return (1);
+		i++;
+	}
+	return (0);
 }
 
 int fileNameCheck(char *filename)
