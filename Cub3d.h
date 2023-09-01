@@ -36,4 +36,5 @@ char	*ft_strdup(char *dst, char	*src);
 void	saveMap(t_runtime *r, int fd, char *pline);
 int		fileNameCheck(char *filename);
 void	initval(t_runtime *r);
+void	cubfile(t_runtime *r, int fd);
 #endif

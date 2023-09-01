@@ -6,7 +6,7 @@
 /*   By: jgirard- <jgirard-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 16:54:12 by jgirard-          #+#    #+#             */
-/*   Updated: 2023/08/29 14:21:53 by jgirard-         ###   ########.fr       */
+/*   Updated: 2023/09/01 18:31:49 by jgirard-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,23 @@
 
 #include <stdlib.h>
 
+char *ft_strdup(char	*dst, char *src)
+{
+	int	i;
+
+	i = 0;
+	while (src[i])
+		++i;
+	dst = malloc(sizeof(char) * i + 1);
+	i = 0;
+	while (src[i])
+	{
+		dst[i] = src[i];
+		++i;
+	}
+	dst[i] = '\0';
+	return (dst);
+}
 
 static int	ft_mots(char const *str, char c)
 {
@@ -98,7 +115,7 @@ char	**ft_split(char const *s, char c)
 }
 
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
 	char			*s3;
 	unsigned int	i;
@@ -106,7 +123,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 	if (!s1 || !s2)
 		return (0);
-	s3 = (char *)malloc(sizeof(*s3) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	s3 = (char *)malloc(sizeof(*s3) * (gnl_ft_strlen(s1) + gnl_ft_strlen(s2) + 1));
 	if (!s3)
 		return (0);
 	i = 0;
@@ -132,7 +149,7 @@ char	*ft_strdup_f(char *src)
 	char	*p;
 
 	i = 0;
-	p = malloc((ft_strlen(src) + 1) * sizeof(char));
+	p = malloc((gnl_ft_strlen(src) + 1) * sizeof(char));
 	if (!p)
 		return (0);
 	while (src[i])
@@ -147,11 +164,10 @@ char	*ft_strdup_f(char *src)
 char	**ft_strcpy_env(char **envp)
 {
 	int		i;
-	int		len;
 	char	**cpyenv;
 
 	i = 0;
-	len = 0;
+	cpyenv = NULL;
 	while (envp[i])
 	{
 		cpyenv[i] = ft_strdup_f(envp[i]);
@@ -242,11 +258,11 @@ void saveMap(t_runtime *r, int fd, char *pline)
 	char	*n_map;
 	char	*tmp;
 	
+	tmp = NULL;
 	n_map = ft_strdup(tmp, "");
 	while (pline && !is_line_empty(pline))
 	{
 		n_map = ft_strjoin(n_map, pline);
-		pline = get_next_line(fd);
 		free(pline);
 		pline =	get_next_line(fd);
 		r->map.lines++;
@@ -254,17 +270,29 @@ void saveMap(t_runtime *r, int fd, char *pline)
 			r->map.columns = gnl_ft_strlen(pline);
 	}
 	free(pline);
+	//r->map.un_pmap = ft_be
 	r->map.un_pmap = ft_split(n_map, '\n');
+	int i = 0;
+	while (r->map.un_pmap[i])
+	{
+		printf("line numb %d = %s\n",i ,  r->map.un_pmap[i]);
+		i++;
+	}
+	
 	free(n_map);
 } 
 
-char	*get_next_mod(int fd, int *line_num, t_runtime *r)
+char	*get_next_mod(int fd, int *line_num)
 {
 	char	*line;
 	int		nb_line;
 
 	line = get_next_line(fd);
+	//if(line == NULL)
+	//	exit (0);
+	printf("line %s\n", line);
 	nb_line = 1;
+		printf("yey\n");
 	while (line && is_line_empty(line))
 	{
 		free(line);
@@ -290,55 +318,12 @@ int charset(char c, char *set)
 	i = 0;
 	while(set[i])
 	{
-		if(c == set[i])
+		if(c == set[i++])
 			return (1);
-		i++;
 	}
+	printf("i have down syndrome\n");
 	return (0);
 }
-
-int fileNameCheck(char *filename)
-{
-	int i;
-
-	i = 0;
-	if(!filename)
-	{
-		printf("Error: No file was passed, Exmple: ./cub3D <filename>\n");
-		return (1);
-	}
-	while(filename[i])
-		i++;
-	if(filename[i - 1] == 'b' && filename[i - 2] == 'u' && filename[i - 3] == 'c')
-		return(0);
-	printf("Error: Wrong filetype, select a file with .cub termination\n");
-	return(1);
-}
-
-int ft_is_space(int n)
-{
-	return(n == '\r' 
-		|| n == ' ' 
-		|| n == '\t'
-		|| n == '\0'
-		|| n == '\v');
-}
-
-int	is_line_empty(char *str)
-{
-	int	i;
-
-	i = 0;
-	if (!str)
-		return (1);
-	while (str[i])
-	{
-		if (!ft_is_space(str[i++]))
-			return (0);
-	}
-	return (1);
-}
-
 
 // void	mapParser(int fd, t_runtime *r)
 // {
@@ -362,77 +347,6 @@ int	is_line_empty(char *str)
 	
 // }
 
-void	init_val(t_runtime *r)
-{
-	r->map.lines = 0;
-	r->map.columns = 0;
-	r->map.un_pmap = NULL;
-	r->map.pmap = NULL;
-	r->player.playersize = 0;
-	r->player.Pposx = 0;
-	r->player.Pposy = 0;	
-}
-
-void saveMap(t_runtime *r, int fd, char *pline)
-{
-	char	*n_map;
-	char	*tmp;
-	
-	n_map = ft_strdup(tmp, "");
-	while (pline && !is_line_empty(pline))
-	{
-		n_map = ft_strjoin(n_map, pline);
-		pline = get_next_line(fd);
-		free(pline);
-		pline =	get_next_line(fd);
-		r->map.lines++;
-		if((int) gnl_ft_strlen(pline) > r->map.columns)
-			r->map.columns = gnl_ft_strlen(pline);
-	}
-	free(pline);
-	r->map.un_pmap = ft_split(n_map, '\n');
-	free(n_map);
-} 
-
-char	*get_next_mod(int fd, int *line_num, t_runtime *r)
-{
-	char	*line;
-	int		nb_line;
-
-	line = get_next_line(fd);
-	nb_line = 1;
-	while (line && is_line_empty(line))
-	{
-		free(line);
-		line = get_next_line(fd);
-		nb_line++;
-	}
-	if (line_num)
-		line_num += nb_line;
-	return (line);
-}
-
-int ft_isupcase(int c)
-{
-	if(c >= 'A' && c <= 'Z')
-		return (1);
-	return (0);
-}
-
-int charset(char c, char *set)
-{
-	int i;
-
-	i = 0;
-	while(set[i])
-	{
-		if(c == set[i])
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
 void	cubfile(t_runtime *r, int fd)
 {
 	char	*uline;
@@ -441,21 +355,23 @@ void	cubfile(t_runtime *r, int fd)
 	uline = (char *) 1;
 	while (uline && !r->map.un_pmap)
 	{
-		uline = get_next_line_mod(fd, r->map.lines);
+		uline = get_next_mod(fd, &r->map.lines);
+		//printf("Line: %s", uline);
 		r->map.lines++;
 		i = 0;
 		while (uline && ft_is_space(uline[i]))
 			i++;
+		printf("baka %d\n", i);
 		if (!uline || uline[i] == '#')
 			free(uline);
-		else if (ft_isupcase(uline[i]))
-			map_params_setup(uline, r);
+		//else if (ft_isupcase(uline[i]))
+		//	map_params_setup(uline, r);
 		else if (charset(uline[i], MAP_PARSET))
 			saveMap(r, fd, uline);
 		else
-			printf("Error: Critical 101\n");
+			printf("Error: Critical 102\n");
 	}
-	uline = get_next_mod(fd, r->map.lines, r);
+	uline = get_next_mod(fd, &r->map.lines);
 	if(uline)
 		printf("Error: Critical 101\n");
 }

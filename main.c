@@ -6,7 +6,7 @@
 /*   By: jgirard- <jgirard-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 14:18:19 by jgirard-          #+#    #+#             */
-/*   Updated: 2023/08/28 18:04:13 by jgirard-         ###   ########.fr       */
+/*   Updated: 2023/09/01 16:58:30 by jgirard-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,12 +148,13 @@ void loop_hook()
 int	main(int ac, char **av)
 {
 	(void)ac;
-	//int fd;
+	int fd;
 	if(fileNameCheck(av[1]))
 		return (1);
-	//fd = open(av[1], O_RDONLY);
+	fd = open(av[1], O_RDONLY);
 	t_runtime r;
-	//saveMap(&r, fd);
+	cubfile(&r, fd);
+	printf("nb of lines = %d\n",r.map.lines);
 	mlx_set_setting(MLX_MAXIMIZED, false);
 	mlx_t* mlx = mlx_init(WIDTH, HEIGHT, "cub3D", true);
 	if (!mlx)
@@ -161,7 +162,7 @@ int	main(int ac, char **av)
 	r.img = mlx_new_image(mlx, HEIGHT, WIDTH);
 	if (!r.img || (mlx_image_to_window(mlx, r.img, 0, 0) < 0))
 		ft_error();
-	r.player.playersize = 40;
+	r.player.playersize = 20;
 	r.player.Pposx = 250;
 	r.player.Pposy = 250;
 	fillCube(r.img, r.player.Pposx - r.player.playersize / 2, r.player.Pposy + r.player.playersize / 2, r.player.playersize ,get_rgba(255, 0, 0, 255));
