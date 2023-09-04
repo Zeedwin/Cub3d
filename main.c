@@ -6,7 +6,7 @@
 /*   By: jgirard- <jgirard-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 14:18:19 by jgirard-          #+#    #+#             */
-/*   Updated: 2023/09/01 16:58:30 by jgirard-         ###   ########.fr       */
+/*   Updated: 2023/09/04 15:10:34 by jgirard-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 #include <stdio.h>
 #include <unistd.h>
 #include "MLX42/MLX42.h"
-#define WIDTH 300
-#define HEIGHT 300
+#define WIDTH 100
+#define HEIGHT 100
 #define BPP sizeof(int32_t)
 static void ft_error(void)
 {
@@ -156,15 +156,15 @@ int	main(int ac, char **av)
 	cubfile(&r, fd);
 	printf("nb of lines = %d\n",r.map.lines);
 	mlx_set_setting(MLX_MAXIMIZED, false);
-	mlx_t* mlx = mlx_init(WIDTH, HEIGHT, "cub3D", true);
+	mlx_t* mlx = mlx_init(WIDTH * r.map.columns, HEIGHT * r.map.lines, "cub3D", true);
 	if (!mlx)
 		ft_error(); 
 	r.img = mlx_new_image(mlx, HEIGHT, WIDTH);
 	if (!r.img || (mlx_image_to_window(mlx, r.img, 0, 0) < 0))
 		ft_error();
-	r.player.playersize = 20;
-	r.player.Pposx = 250;
-	r.player.Pposy = 250;
+	r.player.playersize = 10;
+	r.player.Pposx = 20;
+	r.player.Pposy = 20;
 	fillCube(r.img, r.player.Pposx - r.player.playersize / 2, r.player.Pposy + r.player.playersize / 2, r.player.playersize ,get_rgba(255, 0, 0, 255));
 	drawLine(r.img, 20, 20, 50, 50, get_rgba(255, 0, 0, 255));
 	mlx_loop_hook(mlx,loop_hook, NULL);

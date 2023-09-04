@@ -6,7 +6,7 @@
 /*   By: jgirard- <jgirard-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 16:54:12 by jgirard-          #+#    #+#             */
-/*   Updated: 2023/09/01 18:31:49 by jgirard-         ###   ########.fr       */
+/*   Updated: 2023/09/04 14:38:54 by jgirard-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -290,13 +290,13 @@ char	*get_next_mod(int fd, int *line_num)
 	line = get_next_line(fd);
 	//if(line == NULL)
 	//	exit (0);
-	printf("line %s\n", line);
 	nb_line = 1;
 		printf("yey\n");
 	while (line && is_line_empty(line))
 	{
 		free(line);
 		line = get_next_line(fd);
+		printf("line %s\n", line);
 		nb_line++;
 	}
 	if (line_num)
@@ -356,7 +356,6 @@ void	cubfile(t_runtime *r, int fd)
 	while (uline && !r->map.un_pmap)
 	{
 		uline = get_next_mod(fd, &r->map.lines);
-		//printf("Line: %s", uline);
 		r->map.lines++;
 		i = 0;
 		while (uline && ft_is_space(uline[i]))
