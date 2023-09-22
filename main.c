@@ -15,8 +15,8 @@
 #include <stdio.h>
 #include <unistd.h>
 #include "MLX42/MLX42.h"
-#define WIDTH 100
-#define HEIGHT 100
+#define WIDTH 10
+#define HEIGHT 10
 #define BPP sizeof(int32_t)
 static void ft_error(void)
 {
@@ -35,14 +35,12 @@ void my_mlx_draw_pixel(uint8_t* pixel, uint32_t color)
 
 int my_mlx_put_pixel(mlx_image_t *img, uint32_t x, uint32_t y, uint32_t color)
 {
+	//printf("width: %d , lenght: %d\n", img->width, img->height);
 	if(!img || x > img->width || y > img->height)
 	{
-		//r->player.Pposx -= 1;
-		//r->player.Pposy -= 2;
-		printf("Error: POB!\n");
+		printf("Error:  gros con POB!\n");
 		exit (-1);
 	}
-	
 	uint8_t *pixelbuff = &img->pixels[(y * img->width + x) * 4];
 	my_mlx_draw_pixel(pixelbuff, color);
 	return (0);
@@ -108,17 +106,16 @@ void my_keyhook(mlx_key_data_t keydata, void* param)
 	//t_player *pl = param;
 	t_runtime *r = param;
 	
-	printf("Pxpos = %d Pypos = %d\n", r->player.Pposx, r->player.Pposy);
 	if ((keydata.key == MLX_KEY_RIGHT && keydata.action == MLX_PRESS) || (keydata.key == MLX_KEY_RIGHT && keydata.action == MLX_REPEAT))
 	{
-		memset(r->img->pixels, 0, r->img->width*r->img->height*4);
+		fillCube(r->img, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(0, 0, 0, 0));
 		r->player.Pposx += 2;
 		fillCube(r->img, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(255, 0, 0, 255));
 		//printf("Posx = %d\n", pl->Pposx);
 	}
 	if ((keydata.key == MLX_KEY_UP && keydata.action == MLX_PRESS) || (keydata.key == MLX_KEY_UP && keydata.action == MLX_REPEAT))
 	{
-		memset(r->img->pixels, 0, r->img->width*r->img->height*4);
+		fillCube(r->img, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(0, 0, 0, 0));
 		r->player.Pposy -= 2;
 		fillCube(r->img, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(255, 0, 0, 255));
 		//printf("Posy = %d\n", pl->Pposy);
@@ -126,18 +123,19 @@ void my_keyhook(mlx_key_data_t keydata, void* param)
 	if ((keydata.key == MLX_KEY_DOWN && keydata.action == MLX_PRESS) || (keydata.key == MLX_KEY_DOWN && keydata.action == MLX_REPEAT))
 	{
 		
-		memset(r->img->pixels, 0, r->img->width*r->img->height*4);
+		fillCube(r->img, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(0, 0, 0, 0));
 		r->player.Pposy += 2;
 		fillCube(r->img, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(255, 0, 0, 255));
 		//printf("Posy = %d\n", pl->Pposy);
 	}
 	if ((keydata.key == MLX_KEY_LEFT && keydata.action == MLX_REPEAT) || (keydata.key == MLX_KEY_LEFT && keydata.action == MLX_PRESS))
 	{
-		memset(r->img->pixels, 0, r->img->width*r->img->height*4);
+		fillCube(r->img, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(0, 0, 0, 0));
 		r->player.Pposx -= 2;
 		fillCube(r->img, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(255, 0, 0, 255));
 		//printf("Posy = %d\n", pl->Pposy);
 	}
+	printf("Pxpos = %d Pypos = %d\n", r->player.Pposx, r->player.Pposy);
 }
 
 void loop_hook() 
@@ -154,12 +152,12 @@ int	main(int ac, char **av)
 	fd = open(av[1], O_RDONLY);
 	t_runtime r;
 	cubfile(&r, fd);
-	printf("nb of lines = %d\n",r.map.lines);
+	printf("nb of lines = %d, nb of columns %d\n",r.map.lines, r.map.columns);
 	mlx_set_setting(MLX_MAXIMIZED, false);
-	mlx_t* mlx = mlx_init(WIDTH * r.map.columns, HEIGHT * r.map.lines, "cub3D", true);
+	mlx_t* mlx = mlx_init(100 * r.map.columns, 100 * r.map.lines, "cub3D", true);
 	if (!mlx)
-		ft_error(); 
-	r.img = mlx_new_image(mlx, HEIGHT, WIDTH);
+		ft_error();
+	r.img = mlx_new_image(mlx, 100 * r.map.columns, 100 * r.map.lines);
 	if (!r.img || (mlx_image_to_window(mlx, r.img, 0, 0) < 0))
 		ft_error();
 	r.player.playersize = 10;
