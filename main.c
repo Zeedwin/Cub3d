@@ -93,12 +93,13 @@ void drawLine(mlx_image_t *img, int x1, int y1, int x2, int y2, int color)
 
 // }
 
-void fillCube(mlx_image_t *img, int x, int y, int size, int fill_color) {
+void fillCube(t_runtime *r, int x, int y, int size, int fill_color) {
     for (int i = x + 1; i < x + size; i++) {
         for (int j = y - 1; j > y - size; j--) {
-            my_mlx_put_pixel(img, j, i, fill_color);
+            my_mlx_put_pixel(r->img, j, i, fill_color);
         }
     }
+	drawLine(r->img, r->player.Pposx, x, r->player.Pposy, y, get_rgba(255, 0, 0, 255));
 }
 
 void my_keyhook(mlx_key_data_t keydata, void* param)
@@ -108,31 +109,30 @@ void my_keyhook(mlx_key_data_t keydata, void* param)
 	
 	if ((keydata.key == MLX_KEY_RIGHT && keydata.action == MLX_PRESS) || (keydata.key == MLX_KEY_RIGHT && keydata.action == MLX_REPEAT))
 	{
-		fillCube(r->img, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(0, 0, 0, 0));
+		memset(r->img->pixels, 0, r->img->width *r->img->height * sizeof(int32_t));
 		r->player.Pposx += 2;
-		fillCube(r->img, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(255, 0, 0, 255));
+		fillCube(r, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(255, 0, 0, 255));
 		//printf("Posx = %d\n", pl->Pposx);
 	}
 	if ((keydata.key == MLX_KEY_UP && keydata.action == MLX_PRESS) || (keydata.key == MLX_KEY_UP && keydata.action == MLX_REPEAT))
 	{
-		fillCube(r->img, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(0, 0, 0, 0));
+		memset(r->img->pixels, 0, r->img->width *r->img->height * sizeof(int32_t));
 		r->player.Pposy -= 2;
-		fillCube(r->img, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(255, 0, 0, 255));
+		fillCube(r, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(255, 0, 0, 255));
 		//printf("Posy = %d\n", pl->Pposy);
 	}
 	if ((keydata.key == MLX_KEY_DOWN && keydata.action == MLX_PRESS) || (keydata.key == MLX_KEY_DOWN && keydata.action == MLX_REPEAT))
 	{
-		
-		fillCube(r->img, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(0, 0, 0, 0));
+		memset(r->img->pixels, 0, r->img->width *r->img->height * sizeof(int32_t));
 		r->player.Pposy += 2;
-		fillCube(r->img, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(255, 0, 0, 255));
+		fillCube(r, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(255, 0, 0, 255));
 		//printf("Posy = %d\n", pl->Pposy);
 	}
 	if ((keydata.key == MLX_KEY_LEFT && keydata.action == MLX_REPEAT) || (keydata.key == MLX_KEY_LEFT && keydata.action == MLX_PRESS))
 	{
-		fillCube(r->img, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(0, 0, 0, 0));
+		memset(r->img->pixels, 0, r->img->width *r->img->height * sizeof(int32_t));
 		r->player.Pposx -= 2;
-		fillCube(r->img, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(255, 0, 0, 255));
+		fillCube(r, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(255, 0, 0, 255));
 		//printf("Posy = %d\n", pl->Pposy);
 	}
 	printf("Pxpos = %d Pypos = %d\n", r->player.Pposx, r->player.Pposy);
@@ -163,8 +163,7 @@ int	main(int ac, char **av)
 	r.player.playersize = 10;
 	r.player.Pposx = 20;
 	r.player.Pposy = 20;
-	fillCube(r.img, r.player.Pposx - r.player.playersize / 2, r.player.Pposy + r.player.playersize / 2, r.player.playersize ,get_rgba(255, 0, 0, 255));
-	drawLine(r.img, 20, 20, 50, 50, get_rgba(255, 0, 0, 255));
+	fillCube(&r, r.player.Pposx - r.player.playersize / 2, r.player.Pposy + r.player.playersize / 2, r.player.playersize ,get_rgba(255, 0, 0, 255));
 	mlx_loop_hook(mlx,loop_hook, NULL);
 	mlx_key_hook(mlx, &my_keyhook, &r);
 	printf("Pxpos = %d Pypos = %d\n", r.player.Pposx, r.player.Pposy);
