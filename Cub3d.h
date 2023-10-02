@@ -22,6 +22,15 @@ typedef struct player
 	double	Pdir;
 }			t_player;
 
+typedef struct raycast
+{
+	double rad_raystart;
+	double rad_in;
+	double x;
+	double y;
+}			t_raycast;
+
+
 typedef struct s_map
 {
 	char	**un_pmap;
@@ -35,6 +44,7 @@ typedef struct runetime
 	t_map	map;
 	t_player player;
 	mlx_image_t	*img;
+	t_raycast	ray;
 }			t_runtime;
 
 void 	init_Ppos(t_runtime *r);
