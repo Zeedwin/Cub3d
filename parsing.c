@@ -347,6 +347,34 @@ int charset(char c, char *set)
 	
 // }
 
+// rad_raystart = Pdir + FOV / 2
+
+void 	init_Ppos(t_runtime *r)
+{
+	int y;
+	int x;
+	int c;
+
+	y = 0;
+	x = 0;
+	c = CASE_SIZE;
+	printf("ALAIDE %c\n", r->map.un_pmap[y][x]);
+	while (r->map.un_pmap[y])
+	{
+		while (r->map.un_pmap[y][x])
+		{
+			if (r->map.un_pmap[y][x] == charset(r->map.un_pmap[y][x], MAP_PARSET))
+			{
+				r->player.Pposx = x * c + 1 * c / 2;
+				r->player.Pposy = y * c + 1 * c / 2;
+				return;
+			}
+			x++;
+		}
+		y++;
+	}
+}
+
 void	cubfile(t_runtime *r, int fd)
 {
 	char	*uline;
