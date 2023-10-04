@@ -41,10 +41,11 @@ typedef struct s_map
 
 typedef struct runetime
 {
-	t_map	map;
-	t_player player;
+	t_map		map;
+	t_player	player;
 	mlx_image_t	*img;
 	t_raycast	ray;
+	mlx_t		*mlx_1;
 }			t_runtime;
 
 void 	init_Ppos(t_runtime *r);

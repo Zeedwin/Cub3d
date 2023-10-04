@@ -179,35 +179,32 @@ void my_keyhook(mlx_key_data_t keydata, void* param)
 	//t_player *pl = param;
 	t_runtime *r = param;
 	
-	if ((keydata.key == MLX_KEY_D && keydata.action == MLX_REPEAT))
+	(void) keydata;
+	if (mlx_is_key_down(r->mlx_1, MLX_KEY_D))
 	{
 		memset(r->img->pixels, 0, r->img->width *r->img->height * sizeof(int32_t));
-		r->player.Pposx += 2;
+		r->player.Pposx += 4;
 		fillCube(r, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(255, 0, 0, 255));
-		//printf("Posx = %d\n", pl->Pposx);
 	}
-	if ((keydata.key == MLX_KEY_W && keydata.action == MLX_PRESS) || (keydata.key == MLX_KEY_W && keydata.action == MLX_REPEAT))
+	if (mlx_is_key_down(r->mlx_1, MLX_KEY_W))
 	{
 		memset(r->img->pixels, 0, r->img->width *r->img->height * sizeof(int32_t));
-		r->player.Pposy -= 2;
+		r->player.Pposy -= 4;
 		fillCube(r, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(255, 0, 0, 255));
-		//printf("Posy = %d\n", pl->Pposy);
 	}
-	if ((keydata.key == MLX_KEY_S && keydata.action == MLX_PRESS) || (keydata.key == MLX_KEY_S && keydata.action == MLX_REPEAT))
+	if (mlx_is_key_down(r->mlx_1, MLX_KEY_S))
 	{
 		memset(r->img->pixels, 0, r->img->width *r->img->height * sizeof(int32_t));
-		r->player.Pposy += 2;
+		r->player.Pposy += 4;
 		fillCube(r, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(255, 0, 0, 255));
-		//printf("Posy = %d\n", pl->Pposy);
 	}
-	if ((keydata.key == MLX_KEY_A && keydata.action == MLX_REPEAT) || (keydata.key == MLX_KEY_A && keydata.action == MLX_PRESS))
+	if (mlx_is_key_down(r->mlx_1, MLX_KEY_A))
 	{
 		memset(r->img->pixels, 0, r->img->width *r->img->height * sizeof(int32_t));
-		r->player.Pposx -= 2;
+		r->player.Pposx -= 4;
 		fillCube(r, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(255, 0, 0, 255));
-		//printf("Posy = %d\n", pl->Pposy);
 	}
-	if ((keydata.key == MLX_KEY_RIGHT && keydata.action == MLX_REPEAT))
+	if (mlx_is_key_down(r->mlx_1, MLX_KEY_RIGHT))
 	{
 		memset(r->img->pixels, 0, r->img->width *r->img->height * sizeof(int32_t));
 		r->player.Pdir += 0.0174533 * 3;
@@ -217,7 +214,7 @@ void my_keyhook(mlx_key_data_t keydata, void* param)
 		}
 		fillCube(r, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(255, 0, 0, 255));
 	}
-	if ((keydata.key == MLX_KEY_LEFT && keydata.action == MLX_REPEAT) || (keydata.key == MLX_KEY_LEFT && keydata.action == MLX_PRESS))
+	if (mlx_is_key_down(r->mlx_1, MLX_KEY_LEFT))
 	{
 		memset(r->img->pixels, 0, r->img->width *r->img->height * sizeof(int32_t));
 		r->player.Pdir -= 0.0174533 * 3;
@@ -232,7 +229,7 @@ void my_keyhook(mlx_key_data_t keydata, void* param)
 
 void loop_hook() 
 {
-		
+
 }
 
 int	main(int ac, char **av)
@@ -247,21 +244,21 @@ int	main(int ac, char **av)
 	//init_Ppos(&r);
 	printf("nb of lines = %d, nb of columns %d\n",r.map.lines, r.map.columns);
 	mlx_set_setting(MLX_MAXIMIZED, false);
-	mlx_t* mlx = mlx_init(WIDTH, HEIGHT, "cub3D", true);
-	if (!mlx)
+	r.mlx_1 = mlx_init(WIDTH, HEIGHT, "cub3D", true);
+	if (!r.mlx_1)
 		ft_error();
-	r.img = mlx_new_image(mlx, WIDTH, HEIGHT);
-	if (!r.img || (mlx_image_to_window(mlx, r.img, 0, 0) < 0))
+	r.img = mlx_new_image(r.mlx_1, WIDTH, HEIGHT);
+	if (!r.img || (mlx_image_to_window(r.mlx_1, r.img, 0, 0) < 0))
 		ft_error();
 	r.player.playersize = 10;
 	r.player.Pposx = 70;
 	r.player.Pposy = 70;
 	r.player.Pdir = PI;
 	fillCube(&r, r.player.Pposx - r.player.playersize / 2, r.player.Pposy + r.player.playersize / 2, r.player.playersize ,get_rgba(255, 0, 0, 255));
-	mlx_loop_hook(mlx,loop_hook, NULL);
-	mlx_key_hook(mlx, &my_keyhook, &r);
+	mlx_loop_hook(r.mlx_1,loop_hook, &r);
+	mlx_key_hook(r.mlx_1, &my_keyhook, &r);
 	printf("Pxpos = %d Pypos = %d\n", r.player.Pposx, r.player.Pposy);
-	mlx_loop(mlx);
-	mlx_terminate(mlx);
+	mlx_loop(r.mlx_1);
+	mlx_terminate(r.mlx_1);
 	return (EXIT_SUCCESS);
 }
