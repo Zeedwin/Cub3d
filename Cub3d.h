@@ -10,7 +10,7 @@
 #include <math.h>
 #include "getnext/get_next_line.h"
 
-#define CASE_SIZE 20;
+#define CASE_SIZE 20
 #define PI 3.141592653589793238462643383279502884197
 #define FOV 1.0472
 
@@ -18,16 +18,18 @@ typedef struct player
 {
 	int 	playersize;
 	int 	Pposy;
-	int 	Pposx;
+	int		Pposx;
 	double	Pdir;
 }			t_player;
 
 typedef struct raycast
 {
-	double rad_raystart;
-	double rad_in;
-	double x;
-	double y;
+	double 	rad_raystart;
+	double 	rad_in;
+	double 	x;
+	double 	y;
+	double	dist_to_vertical;
+	double	dist_to_horizontal;
 }			t_raycast;
 
 

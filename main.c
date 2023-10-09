@@ -83,15 +83,35 @@ void drawLine(mlx_image_t *img, int x1, int y1, int x2, int y2, int color)
 	 }
 }
 
-// void drawCube(mlx_image_t *img, int x, int y, int size, int color) {
-//     // Draw front face
-//     drawLine(img, x, y, x + size, y, color);
-//     drawLine(img, x, y, x, y - size, color);
-//     drawLine(img, x, y - size, x + size, y - size, color);
-//     drawLine(img, x + size, y, x + size, y - size, color);
+void draw_line_r(t_runtime *game, int x0, int y0, int x1, int y1) {
+    int dx = abs(x1 - x0);
+    int sx = x0 < x1 ? 1 : -1;
+    int dy = abs(y1 - y0);
+    int sy = y0 < y1 ? 1 : -1;
+    int err = (dx > dy ? dx : -dy) / 2;
+    int e2;
 
+    while (1) {
+		if (x0 < 0 || x0 >= WIDTH || y0 < 0 || y0 >= HEIGHT) {
+            break;
+        }
+       my_mlx_put_pixel(game->img, x0, y0, get_rgba(0, 255, 0, 255));
 
-// }
+        if (x0 == x1 && y0 == y1) break;
+
+        e2 = err;
+
+        if (e2 > -dx) {
+            err -= dy;
+            x0 += sx;
+        }
+
+        if (e2 < dy) {
+            err += dx;
+            y0 += sy;
+        }
+    }
+}
 
 void draw_line(mlx_image_t *img, int x0, int y0, double angle) {
     int x1 = x0 + (int)(60 * cos(angle));
@@ -128,34 +148,32 @@ void draw_line(mlx_image_t *img, int x0, int y0, double angle) {
     }
 }
 
-// void	find_raydist(t_runtime *r)
-// {
-// 	double	dist_to_vertical;
-// 	double 	dist_to_horizontal;
-
-// 	r->ray.x = cos(r->ray.rad_raystart);
-// 	r->ray.y = sin(r->ray.rad_raystart);
-// 	if (r->ray.y < 0)
-// 	{
-// 		dist_to_horizontal = r->player.Pposy  - (r->player.Pposy / CASE_SIZE) * CASE_SIZE;
-// 	}
-// 	if (r->ray.y > 0)
-// 	{
-// 		dist_to_horizontal = (r->player.Pposy / CASE_SIZE) * CASE_SIZE + CASE_SIZE - r->player.Pposy;
-// 	}
-// 	if (r->ray.x < 0)
-// 	{
-// 		dist_to_vertical = r->player.Pposx - (r->player.Pposx / CASE_SIZE) * CASE_SIZE;	
-// 	}
-// 	if (r->ray.x > 0)
-// 	{
-// 		dist_to_vertical = (r->player.Pposx / CASE_SIZE) * CASE_SIZE + CASE_SIZE - r->player.Pposx;
-// 	}
-// }
+void	find_raydist(t_runtime *r)
+{
+	r->ray.x = cos(r->ray.rad_raystart);
+	r->ray.y = sin(r->ray.rad_raystart);
+	if (r->ray.y < 0)
+	{
+		r->ray.dist_to_horizontal = r->player.Pposy  - (r->player.Pposy / CASE_SIZE) * CASE_SIZE;
+	}
+	if (r->ray.y > 0)
+	{
+		r->ray.dist_to_horizontal = (r->player.Pposy / CASE_SIZE) * CASE_SIZE + CASE_SIZE - r->player.Pposy;
+	}
+	if (r->ray.x < 0)
+	{
+		r->ray.dist_to_vertical = r->player.Pposx - (r->player.Pposx / CASE_SIZE) * CASE_SIZE;	
+	}
+	if (r->ray.x > 0)
+	{
+		r->ray.dist_to_vertical = (r->player.Pposx / CASE_SIZE) * CASE_SIZE + CASE_SIZE - r->player.Pposx;
+	}
+}
 
 void fillCube(t_runtime *r, int x, int y, int size, int fill_color) {
 	int i;
-
+	double endpoint_x = r->player.Pposx + cos(r->player.Pdir) * WIDTH;
+    double endpoint_y = r->player.Pposy + sin(r->player.Pdir) * HEIGHT;
 	i = 0;
 	r->ray.rad_in = FOV / WIDTH;
 	r->ray.rad_raystart = r->player.Pdir + FOV / 2;
@@ -164,14 +182,16 @@ void fillCube(t_runtime *r, int x, int y, int size, int fill_color) {
             my_mlx_put_pixel(r->img, j, i, fill_color);
         }
     }
+	find_raydist(r);
+	printf("Horizontal = %d , Vertical = %d\n", (int)r->ray.dist_to_horizontal, (int)r->ray.dist_to_vertical);
 	while (i  < WIDTH)
 	{
-		//find_raydist(r);
 		draw_line(r->img, r->player.Pposx, r->player.Pposy, r->ray.rad_raystart);
+		draw_line_r(r, r->player.Pposx, r->player.Pposy, (int)endpoint_x, (int)endpoint_y);
+		//draw_line_r(r, r->player.Pposx, r->player.Pposy, WIDTH, HEIGHT);
 		r->ray.rad_raystart -= r->ray.rad_in;
 		i++;
 	}
-	
 }
 
 void my_keyhook(mlx_key_data_t keydata, void* param)
@@ -251,8 +271,8 @@ int	main(int ac, char **av)
 	if (!r.img || (mlx_image_to_window(r.mlx_1, r.img, 0, 0) < 0))
 		ft_error();
 	r.player.playersize = 10;
-	r.player.Pposx = 70;
-	r.player.Pposy = 70;
+	r.player.Pposx = 270;
+	r.player.Pposy = 270;
 	r.player.Pdir = PI;
 	fillCube(&r, r.player.Pposx - r.player.playersize / 2, r.player.Pposy + r.player.playersize / 2, r.player.playersize ,get_rgba(255, 0, 0, 255));
 	mlx_loop_hook(r.mlx_1,loop_hook, &r);

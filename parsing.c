@@ -388,7 +388,7 @@ void	cubfile(t_runtime *r, int fd)
 		i = 0;
 		while (uline && ft_is_space(uline[i]))
 			i++;
-		printf("baka %d\n", i);
+		//printf("baka %d\n", i);
 		if (!uline || uline[i] == '#')
 			free(uline);
 		//else if (ft_isupcase(uline[i]))
@@ -399,6 +399,6 @@ void	cubfile(t_runtime *r, int fd)
 			printf("Error: Critical 102\n");
 	}
 	uline = get_next_mod(fd, &r->map.lines);
-	if(uline)
+	if(!uline)
 		printf("Error: Critical 101\n");
 }
