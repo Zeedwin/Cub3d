@@ -36,11 +36,11 @@ void my_mlx_draw_pixel(uint8_t* pixel, uint32_t color)
 int my_mlx_put_pixel(mlx_image_t *img, uint32_t x, uint32_t y, uint32_t color)
 {
 	//printf("width: %d , lenght: %d\n", img->width, img->height);
-	if(!img || x > img->width || y > img->height)
+	/*if(!img || x > img->width || y > img->height)
 	{
 		printf("Error:  gros con POB!\n");
 		exit (-1);
-	}
+	}*/
 	uint8_t *pixelbuff = &img->pixels[(y * img->width + x) * 4];
 	my_mlx_draw_pixel(pixelbuff, color);
 	return (0);
@@ -202,31 +202,36 @@ void my_keyhook(mlx_key_data_t keydata, void* param)
 	(void) keydata;
 	if (mlx_is_key_down(r->mlx_1, MLX_KEY_D))
 	{
-		memset(r->img->pixels, 0, r->img->width *r->img->height * sizeof(int32_t));
+		fillCube(r, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(0, 0, 0, 0));
+		fillcubeborder(r);
 		r->player.Pposx += 4;
 		fillCube(r, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(255, 0, 0, 255));
 	}
 	if (mlx_is_key_down(r->mlx_1, MLX_KEY_W))
 	{
-		memset(r->img->pixels, 0, r->img->width *r->img->height * sizeof(int32_t));
+		fillCube(r, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(0, 0, 0, 0));
+		fillcubeborder(r);
 		r->player.Pposy -= 4;
 		fillCube(r, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(255, 0, 0, 255));
 	}
 	if (mlx_is_key_down(r->mlx_1, MLX_KEY_S))
 	{
-		memset(r->img->pixels, 0, r->img->width *r->img->height * sizeof(int32_t));
+		fillCube(r, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(0, 0, 0, 0));
+		fillcubeborder(r);
 		r->player.Pposy += 4;
 		fillCube(r, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(255, 0, 0, 255));
 	}
 	if (mlx_is_key_down(r->mlx_1, MLX_KEY_A))
 	{
-		memset(r->img->pixels, 0, r->img->width *r->img->height * sizeof(int32_t));
+		fillCube(r, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(0, 0, 0, 0));
+		fillcubeborder(r);
 		r->player.Pposx -= 4;
 		fillCube(r, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(255, 0, 0, 255));
 	}
 	if (mlx_is_key_down(r->mlx_1, MLX_KEY_RIGHT))
 	{
-		memset(r->img->pixels, 0, r->img->width *r->img->height * sizeof(int32_t));
+		fillCube(r, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(0, 0, 0, 0));
+		fillcubeborder(r);
 		r->player.Pdir += 0.0174533 * 3;
 		if(r->player.Pdir > 2 * PI)
 		{
@@ -236,7 +241,8 @@ void my_keyhook(mlx_key_data_t keydata, void* param)
 	}
 	if (mlx_is_key_down(r->mlx_1, MLX_KEY_LEFT))
 	{
-		memset(r->img->pixels, 0, r->img->width *r->img->height * sizeof(int32_t));
+		fillCube(r, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(0, 0, 0, 0));
+		fillcubeborder(r);	
 		r->player.Pdir -= 0.0174533 * 3;
 		if(r->player.Pdir < 0)
 		{
@@ -263,7 +269,7 @@ int	main(int ac, char **av)
 	cubfile(&r, fd);
 	//init_Ppos(&r);
 	printf("nb of lines = %d, nb of columns %d\n",r.map.lines, r.map.columns);
-	mlx_set_setting(MLX_MAXIMIZED, false);
+	mlx_set_setting(MLX_MAXIMIZED, true);
 	r.mlx_1 = mlx_init(WIDTH, HEIGHT, "cub3D", true);
 	if (!r.mlx_1)
 		ft_error();
@@ -274,6 +280,7 @@ int	main(int ac, char **av)
 	r.player.Pposx = 270;
 	r.player.Pposy = 270;
 	r.player.Pdir = PI;
+	fillcubeborder(&r);
 	fillCube(&r, r.player.Pposx - r.player.playersize / 2, r.player.Pposy + r.player.playersize / 2, r.player.playersize ,get_rgba(255, 0, 0, 255));
 	mlx_loop_hook(r.mlx_1,loop_hook, &r);
 	mlx_key_hook(r.mlx_1, &my_keyhook, &r);
