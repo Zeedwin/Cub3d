@@ -19,6 +19,8 @@ typedef struct player
 	int 	playersize;
 	int 	Pposy;
 	int		Pposx;
+	int		Prevy;
+	int		Prevx;
 	double	Pdir;
 }			t_player;
 
@@ -57,6 +59,6 @@ void fillcubeborder(t_runtime *r);
 char	*ft_strdup(char *dst, char	*src);
 void	saveMap(t_runtime *r, int fd, char *pline);
 int		fileNameCheck(char *filename);
-void	initval(t_runtime *r);
+void	init_val(t_runtime *r);
 void	cubfile(t_runtime *r, int fd);
 #endif

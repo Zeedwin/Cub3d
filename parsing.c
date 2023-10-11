@@ -250,7 +250,9 @@ void	init_val(t_runtime *r)
 	r->map.pmap = NULL;
 	r->player.playersize = 0;
 	r->player.Pposx = 0;
-	r->player.Pposy = 0;	
+	r->player.Pposy = 0;
+	r->player.Prevx = 0;
+	r->player.Prevy = 0;
 }
 
 void saveMap(t_runtime *r, int fd, char *pline)
@@ -258,6 +260,7 @@ void saveMap(t_runtime *r, int fd, char *pline)
 	char	*n_map;
 	char	*tmp;
 	
+	printf("lal\n");
 	tmp = NULL;
 	n_map = ft_strdup(tmp, "");
 	while (pline && !is_line_empty(pline))
@@ -287,11 +290,11 @@ char	*get_next_mod(int fd, int *line_num)
 	char	*line;
 	int		nb_line;
 
+		printf("yey\n");
 	line = get_next_line(fd);
 	//if(line == NULL)
 	//	exit (0);
 	nb_line = 1;
-		printf("yey\n");
 	while (line && is_line_empty(line))
 	{
 		free(line);
@@ -380,6 +383,7 @@ void	cubfile(t_runtime *r, int fd)
 	char	*uline;
 	int		i;
 
+	printf("col check = %d\n", r->map.columns);
 	uline = (char *) 1;
 	while (uline && !r->map.un_pmap)
 	{
@@ -388,7 +392,6 @@ void	cubfile(t_runtime *r, int fd)
 		i = 0;
 		while (uline && ft_is_space(uline[i]))
 			i++;
-		//printf("baka %d\n", i);
 		if (!uline || uline[i] == '#')
 			free(uline);
 		//else if (ft_isupcase(uline[i]))
@@ -398,7 +401,7 @@ void	cubfile(t_runtime *r, int fd)
 		else
 			printf("Error: Critical 102\n");
 	}
-	uline = get_next_mod(fd, &r->map.lines);
+	//uline = get_next_mod(fd, &r->map.lines);
 	if(!uline)
 		printf("Error: Critical 101\n");
 }

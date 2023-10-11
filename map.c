@@ -7,11 +7,13 @@ void fillcubeborder(t_runtime *r)
     int x;
     int y;
 
-    x = 15;
+    x = 10;
     i = 0;
+   // printf("seg ou? %c\n", r->map.un_pmap[1][1]);
+
     while(r->map.un_pmap[i])
     {
-        y = 250;
+        y = 110;
         j = 0;
         while(r->map.un_pmap[i][j])
         {
@@ -44,7 +46,7 @@ void fillcubeborder(t_runtime *r)
     }
 }
 
-void check_border(t_runtime *r)
-{
+// void check_border(t_runtime *r)
+// {
     
-}
+// }
