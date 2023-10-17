@@ -126,11 +126,11 @@ void	find_raydist(t_runtime *r)
 	r->ray.y = sin(r->ray.rad_raystart);
 	if (r->ray.y < 0)
 	{
-		r->ray.dist_to_horizontal = r->player.Pposy  - (r->player.Pposy / CASE_SIZE) * CASE_SIZE;
+		r->ray.dist_to_horizontal = r->player.point.y  - (r->player.point.y / CASE_SIZE) * CASE_SIZE;
 	}
 	if (r->ray.y > 0)
 	{
-		r->ray.dist_to_horizontal = (r->player.Pposy / CASE_SIZE) * CASE_SIZE + CASE_SIZE - r->player.Pposy;
+		r->ray.dist_to_horizontal = (r->player.point.y / CASE_SIZE) * CASE_SIZE + CASE_SIZE - r->player.point.y;
 	}
 	if (r->ray.x < 0)
 	{
@@ -142,10 +142,10 @@ void	find_raydist(t_runtime *r)
 	}
 }
 
-void fillCube(t_runtime *r, int x, int y, int size, int fill_color) {
+void fillCube(t_runtime *r, float x, float y, int size, int fill_color) {
 	int i;
 	///double endpoint_x = r->player.Pposx + (int)(60 * cos(r->player.Pdir));
-    //double endpoint_y = r->player.Pposy + (int)(60* sin(r->player.Pdir));
+    //double endpoint_y = r->player.point.y + (int)(60* sin(r->player.Pdir));
 	i = 0;
 	r->ray.rad_in = FOV / WIDTH;
 	r->ray.rad_raystart = r->player.Pdir + FOV / 2;
@@ -158,9 +158,9 @@ void fillCube(t_runtime *r, int x, int y, int size, int fill_color) {
 	while (i  < WIDTH)
 	{
 		find_raydist(r);
-		//draw_line(r->img, r->player.Pposx, r->player.Pposy, r->ray.rad_raystart);
-			draw_line_r(r, r->player.Pposx, r->player.Pposy, r->ray.rad_raystart);
-		//draw_line_r(r, r->player.Pposx, r->player.Pposy, WIDTH, HEIGHT);
+		//draw_line(r->img, r->player.Pposx, r->player.point.y, r->ray.rad_raystart);
+		draw_line_r(r, r->player.Pposx, r->player.point.y, r->ray.rad_raystart);
+		//draw_line_r(r, r->player.Pposx, r->player.point.y, WIDTH, HEIGHT);
 		r->ray.rad_raystart -= r->ray.rad_in;
 		i++;
 	}
@@ -174,39 +174,39 @@ void my_keyhook(mlx_key_data_t keydata, void* param)
 	(void) keydata;
 	if (mlx_is_key_down(r->mlx_1, MLX_KEY_D))
 	{
-		fillCube(r, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(0, 0, 0, 0));
+		fillCube(r, r->player.point.y- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(0, 0, 0, 0));
 		memset(r->img->pixels, 0, r->img->width *r->img->height * sizeof(int32_t));
 		fillcubeborder(r);
 		r->player.Pposx += 10;
-		fillCube(r, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(255, 0, 0, 255));
+		fillCube(r, r->player.point.y- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(255, 0, 0, 255));
 	}
 	if (mlx_is_key_down(r->mlx_1, MLX_KEY_W))
 	{
-		fillCube(r, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(0, 0, 0, 0));
+		fillCube(r, r->player.point.y- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(0, 0, 0, 0));
 		memset(r->img->pixels, 0, r->img->width *r->img->height * sizeof(int32_t));
 		fillcubeborder(r);
-		r->player.Pposy -= 10;
-		fillCube(r, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(255, 0, 0, 255));
+		r->player.point.y -= 10;
+		fillCube(r, r->player.point.y- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(255, 0, 0, 255));
 	}
 	if (mlx_is_key_down(r->mlx_1, MLX_KEY_S))
 	{
-		fillCube(r, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(0, 0, 0, 0));
+		fillCube(r, r->player.point.y- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(0, 0, 0, 0));
 		memset(r->img->pixels, 0, r->img->width *r->img->height * sizeof(int32_t));
 		fillcubeborder(r);
-		r->player.Pposy += 10;
-		fillCube(r, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(255, 0, 0, 255));
+		r->player.point.y += 10;
+		fillCube(r, r->player.point.y- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(255, 0, 0, 255));
 	}
 	if (mlx_is_key_down(r->mlx_1, MLX_KEY_A))
 	{
-		fillCube(r, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(0, 0, 0, 0));
+		fillCube(r, r->player.point.y- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(0, 0, 0, 0));
 		memset(r->img->pixels, 0, r->img->width *r->img->height * sizeof(int32_t));
 		fillcubeborder(r);
 		r->player.Pposx -= 10;
-		fillCube(r, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(255, 0, 0, 255));
+		fillCube(r, r->player.point.y- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(255, 0, 0, 255));
 	}
 	if (mlx_is_key_down(r->mlx_1, MLX_KEY_RIGHT))
 	{
-		fillCube(r, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(0, 0, 0, 0));
+		fillCube(r, r->player.point.y- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(0, 0, 0, 0));
 		memset(r->img->pixels, 0, r->img->width *r->img->height * sizeof(int32_t));
 		fillcubeborder(r);
 		r->player.Pdir += 0.0174533 * 5;
@@ -214,11 +214,11 @@ void my_keyhook(mlx_key_data_t keydata, void* param)
 		{
 			r->player.Pdir -= 2 * PI;
 		}
-		fillCube(r, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(255, 0, 0, 255));
+		fillCube(r, r->player.point.y- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(255, 0, 0, 255));
 	}
 	if (mlx_is_key_down(r->mlx_1, MLX_KEY_LEFT))
 	{
-		fillCube(r, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(0, 0, 0, 0));
+		fillCube(r, r->player.point.y- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(0, 0, 0, 0));
 		memset(r->img->pixels, 0, r->img->width *r->img->height * sizeof(int32_t));
 		fillcubeborder(r);	
 		r->player.Pdir -= 0.0174533 * 5;
@@ -226,9 +226,9 @@ void my_keyhook(mlx_key_data_t keydata, void* param)
 		{
 			r->player.Pdir += 2 * PI;
 		}
-		fillCube(r, r->player.Pposy- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(255, 0, 0, 255));
+		fillCube(r, r->player.point.y- r->player.playersize / 2, r->player.Pposx + r->player.playersize / 2, r->player.playersize ,get_rgba(255, 0, 0, 255));
 	}
-	//printf("Pxpos = %d Pypos = %d\n", r->player.Pposx, r->player.Pposy);
+	//printf("Pxpos = %d Pypos = %d\n", r->player.Pposx, r->player.point.y);
 }
 
 void loop_hook() 
@@ -257,6 +257,8 @@ int	main(int ac, char **av)
 	r.player.playersize = 10;
 	r.player.Pposx = 270;
 	r.player.Pposy = 270;
+	r.point->x = 20;
+	r.point->y = 20;
 	r.player.Pdir = PI;
 	printf("nb of lines = %d, nb of columns %d\n",r.map.lines, r.map.columns);
 	fillcubeborder(&r);

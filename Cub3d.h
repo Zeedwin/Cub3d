@@ -17,6 +17,7 @@
 typedef struct player
 {
 	int 	playersize;
+	t_point pos;
 	int 	Pposy;
 	int		Pposx;
 	int		Prevy;
@@ -33,6 +34,12 @@ typedef struct raycast
 	double	dist_to_vertical;
 	double	dist_to_horizontal;
 }			t_raycast;
+
+typedef struct point
+{
+	float	x;
+	float	y;
+}			t_point;
 
 
 typedef struct s_map

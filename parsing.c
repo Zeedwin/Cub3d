@@ -250,7 +250,7 @@ void	init_val(t_runtime *r)
 	r->map.pmap = NULL;
 	r->player.playersize = 0;
 	r->player.Pposx = 0;
-	r->player.Pposy = 0;
+	r->player.point.y = 0;
 	r->player.Prevx = 0;
 	r->player.Prevy = 0;
 }
@@ -369,7 +369,7 @@ void 	init_Ppos(t_runtime *r)
 			if (r->map.un_pmap[y][x] == charset(r->map.un_pmap[y][x], MAP_PARSET))
 			{
 				r->player.Pposx = x * c + 1 * c / 2;
-				r->player.Pposy = y * c + 1 * c / 2;
+				r->player.point.y = y * c + 1 * c / 2;
 				return;
 			}
 			x++;
